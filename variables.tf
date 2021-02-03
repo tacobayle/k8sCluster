@@ -45,7 +45,7 @@ variable "ansible" {
     version = "2.9.12"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.44"
+    k8sInstallTag = "v1.45"
   }
 }
 
