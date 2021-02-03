@@ -4,11 +4,6 @@
 variable "vsphere_user" {}
 variable "vsphere_password" {}
 variable "vsphere_server" {}
-variable "avi_password" {}
-variable "avi_username" {}
-variable "avi_vsphere_user" {}
-variable "avi_vsphere_password" {}
-variable "avi_vsphere_server" {}
 variable "docker_registry_username" {}
 variable "docker_registry_password" {}
 
@@ -24,28 +19,6 @@ variable "vcenter" {
     resource_pool = "sof2-01-vc08c01/Resources"
     folder = "NicTfK8s"
     networkMgmt = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
-  }
-}
-
-variable "controller" {
-  default = {
-    cpu = 16
-    memory = 32768
-    disk = 256
-    count = "1"
-    version = "20.1.3-9085"
-    floatingIp = "10.41.134.130"
-    wait_for_guest_net_timeout = 4
-    private_key_path = "~/.ssh/cloudKey"
-    environment = "VMWARE"
-    dns =  ["10.23.108.1", "10.23.108.2"]
-    ntp = ["95.81.173.155", "188.165.236.162"]
-    from_email = "avicontroller@avidemo.fr"
-    se_in_provider_context = "true" # true is required for LSC Cloud
-    tenant_access_to_provider_se = "true"
-    tenant_vrf = "false"
-    aviCredsJsonFile = "~/.avicreds.json"
-    public_key_path = "~/.ssh/cloudKey.pub"
   }
 }
 
@@ -68,92 +41,10 @@ variable "jump" {
 variable "ansible" {
   type = map
   default = {
-    aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
-    aviPbAbsentTag = "v1.48"
-    aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
-    aviConfigureTag = "v4.1"
     version = "2.9.12"
-    opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
-    opencartInstallTag = "v1.21"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
     k8sInstallTag = "v1.42"
-  }
-}
-
-variable "backend_vmw" {
-  default = {
-    cpu = 2
-    memory = 4096
-    disk = 20
-    username = "ubuntu"
-    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-    wait_for_guest_net_timeout = 2
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    ipsData = ["100.64.130.203", "100.64.130.204"]
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    maskData = "/24"
-  }
-}
-
-variable "backend_lsc" {
-  default = {
-    cpu = 2
-    memory = 4096
-    disk = 20
-    username = "ubuntu"
-    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-    wait_for_guest_net_timeout = 2
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    ipsData = ["100.64.130.205", "100.64.130.206"]
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    maskData = "/24"
-  }
-}
-
-variable "opencart" {
-  default = {
-    cpu = 2
-    memory = 4096
-    disk = 20
-    username = "ubuntu"
-    wait_for_guest_net_timeout = 2
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    opencartDownloadUrl = "https://github.com/opencart/opencart/releases/download/3.0.3.5/opencart-3.0.3.5.zip"
-    ipsData = ["100.64.130.201", "100.64.130.202"]
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    maskData = "/24"
-    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-  }
-}
-
-variable "mysql" {
-  default = {
-    cpu = 2
-    memory = 4096
-    disk = 20
-    username = "ubuntu"
-    wait_for_guest_net_timeout = 2
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
-    ipsData = ["100.64.130.200"]
-    maskData = "/24"
-    network = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-     }
-}
-
-variable "client" {
-  type = map
-  default = {
-    cpu = 2
-    count = 2
-    memory = 4096
-    disk = 20
-    username = "ubuntu"
-    network = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
-    wait_for_guest_net_timeout = 2
-    template_name = "ubuntu-bionic-18.04-cloudimg-template"
-    netplanFile = "/etc/netplan/50-cloud-init.yaml"
   }
 }
 
@@ -194,7 +85,7 @@ variable "kubernetes" {
     dockerUser = "ubuntu"
     dockerVersion = "5:19.03.8~3-0~ubuntu-bionic"
     podNetworkCidr = "192.168.0.0/16"
-    cniUrl = "https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml" # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
+    cniUrl = "https://docs.projectcalico.org/manifests/calico.yaml" # calico: https://docs.projectcalico.org/manifests/calico.yaml # flannel: https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml with 1.18.2-00
     version = "1.18.2-00"
     networkPrefix = "/24"
     deployments = [
@@ -236,244 +127,5 @@ variable "kubernetes" {
         url = "https://raw.githubusercontent.com/tacobayle/k8sYaml/master/k8sDeploymentBusyBoxFrontEndV2.yml"
       }
     ]
-  }
-}
-
-variable "vmw" {
-  default = {
-    name = "cloudVmw"
-    datacenter = "sof2-01-vc08"
-    dhcp_enabled = "true"
-    domains = [
-      {
-        name = "vmw.avidemo.fr"
-      }
-    ]
-    management_network = {
-      name = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
-      dhcp_enabled = "true"
-      exclude_discovered_subnets = "true"
-      vcenter_dvs = "true"
-    }
-    network_vip = {
-      name = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
-      ipStartPool = "50"
-      ipEndPool = "99"
-      cidr = "100.64.131.0/24"
-      type = "V4"
-      exclude_discovered_subnets = "true"
-      vcenter_dvs = "true"
-      dhcp_enabled = "no"
-    }
-    network_backend = {
-      name = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-      cidr = "100.64.130.0/24"
-      type = "V4"
-      exclude_discovered_subnets = "true"
-      vcenter_dvs = "true"
-      dhcp_enabled = "yes"
-    }
-    serviceEngineGroup = [
-      {
-        name = "Default-Group"
-        ha_mode = "HA_MODE_SHARED"
-        min_scaleout_per_vs = 2
-        buffer_se = 1
-        extra_shared_config_memory = 0
-        vcenter_folder = "NicTfVmw/SeVmw"
-        vcpus_per_se = 2
-        memory_per_se = 4096
-        disk_per_se = 25
-        realtime_se_metrics = {
-          enabled = true
-          duration = 0
-        }
-      },
-      {
-        name = "seGroupCpuAutoScale"
-        ha_mode = "HA_MODE_SHARED"
-        min_scaleout_per_vs = 1
-        buffer_se = 2
-        extra_shared_config_memory = 0
-        vcenter_folder = "NicTfVmw/SeVmw"
-        vcpus_per_se = 1
-        memory_per_se = 2048
-        disk_per_se = 25
-        auto_rebalance = true
-        auto_rebalance_interval = 30
-        auto_rebalance_criteria = [
-          "SE_AUTO_REBALANCE_CPU"
-        ]
-        realtime_se_metrics = {
-          enabled = true
-          duration = 0
-        }
-      },
-      {
-        name = "seGroupGslb"
-        ha_mode = "HA_MODE_SHARED"
-        min_scaleout_per_vs = 1
-        buffer_se = 0
-        extra_shared_config_memory = 2000
-        vcenter_folder = "NicTfVmw/SeVmw"
-        vcpus_per_se = 2
-        memory_per_se = 8192
-        disk_per_se = 25
-        realtime_se_metrics = {
-          enabled = true
-          duration = 0
-        }
-      }
-    ]
-    pool = {
-      name = "pool1-vmw"
-      lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
-    }
-    pool_opencart = {
-      name = "pool-opencart-vmw"
-      lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
-      application_persistence_profile_ref = "System-Persistence-Client-IP"
-    }
-    virtualservices = {
-      http = [
-        {
-          name = "app1"
-          pool_ref = "pool1-vmw"
-          services: [
-            {
-              port = 80
-              enable_ssl = "false"
-            },
-            {
-              port = 443
-              enable_ssl = "true"
-            }
-          ]
-        },
-        {
-          name = "app2-se-cpu-auto-scale"
-          pool_ref = "pool1-vmw"
-          services: [
-            {
-              port = 80
-              enable_ssl = "false"
-            },
-            {
-              port = 443
-              enable_ssl = "true"
-            }
-          ]
-          se_group_ref: "seGroupCpuAutoScale"
-        },
-        {
-          name = "opencart"
-          pool_ref = "pool-opencart-vmw"
-          services: [
-            {
-              port = 80
-              enable_ssl = "false"
-            },
-            {
-              port = 443
-              enable_ssl = "true"
-            }
-          ]
-        }
-      ]
-      dns = [
-        {
-          name = "app3-dns"
-          services: [
-            {
-              port = 53
-            }
-          ]
-        },
-        {
-          name = "app4-gslb"
-          services: [
-            {
-              port = 53
-            }
-          ]
-          se_group_ref: "seGroupGslb"
-        }
-      ]
-    }
-  }
-}
-
-variable "lsc" {
-  default = {
-    name = "cloudLsc"
-    domains = [
-      {
-        name = "lsc.avidemo.fr"
-      }
-    ]
-    network_vip = {
-      name = "net-lsc-vip"
-      ipStartPool = "100"
-      ipEndPool = "110"
-      cidr = "100.64.131.0/24"
-      type = "V4"
-    }
-    serviceEngineGroup = {
-      name = "Default-Group"
-      vcpus_per_se = 2
-      kernel_version = "4.4.0-72-generic"
-      memory_per_se = 4096
-      disk_per_se = 25
-      SE_INBAND_MGMT = "False"
-      DPDK = "Yes"
-      count = 2
-      networks = [
-        {
-          name = "vxw-dvs-34-virtualwire-3-sid-1080002-sof2-01-vc08-avi-mgmt"
-        },
-        {
-          name = "vxw-dvs-34-virtualwire-117-sid-1080116-sof2-01-vc08-avi-dev113"
-        },
-        {
-          name = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
-        },
-      ]
-      username = "ubuntu"
-      templateName = "ubuntu-xenial-16.04-cloudimg-template"
-      public_key_path = "~/.ssh/cloudKey.pub"
-      private_key_path = "~/.ssh/cloudKey"
-    }
-    pool = {
-        name = "pool9-lsc"
-        lb_algorithm = "LB_ALGORITHM_ROUND_ROBIN"
-    }
-    virtualservices = {
-      http = [
-        {
-          name = "app9-lsc"
-          pool_ref = "pool9-lsc"
-          services: [
-            {
-              port = 80
-              enable_ssl = "false"
-            },
-            {
-              port = 443
-              enable_ssl = "true"
-            }
-          ]
-        }
-      ]
-      dns = [
-        {
-          name = "app8-dns"
-          services: [
-            {
-              port = 53
-            }
-          ]
-        }
-      ]
-    }
   }
 }
