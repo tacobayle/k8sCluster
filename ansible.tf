@@ -11,7 +11,7 @@ resource "null_resource" "foo7" {
   provisioner "remote-exec" {
     inline = [
       "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}",
-      "cd ~/ansible ; git clone ${var.ansible["k8sInstallUrl"]} --branch ${var.ansible["k8sInstallTag"]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml ansibleK8sInstall/main.yml --extra-vars '{\"kubernetes\": ${jsonencode(var.kubernetes)}}'",
+      "cd ~/ansible ; git clone ${var.ansible["k8sInstallUrl"]} --branch ${var.ansible["k8sInstallTag"]} ; ansible-playbook -i /opt/ansible/inventory/inventory.vmware.yml ansibleK8sInstall/main.yml --extra-vars '{\"kubernetes\": ${jsonencode(var.kubernetes)}, \"docker_registry_username\": ${jsonencode(var.docker_registry_username)}, \"docker_registry_password\": ${jsonencode(var.docker_registry_password)}, \"docker_registry_email\": ${jsonencode(var.docker_registry_email)}}'",
     ]
   }
 }

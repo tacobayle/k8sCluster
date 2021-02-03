@@ -6,6 +6,7 @@ variable "vsphere_password" {}
 variable "vsphere_server" {}
 variable "docker_registry_username" {}
 variable "docker_registry_password" {}
+variable "docker_registry_email" {}
 
 #
 # Other Variables
@@ -44,7 +45,7 @@ variable "ansible" {
     version = "2.9.12"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.42"
+    k8sInstallTag = "v1.44"
   }
 }
 
