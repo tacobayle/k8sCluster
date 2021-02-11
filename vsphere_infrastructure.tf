@@ -28,10 +28,11 @@ data "vsphere_network" "networkMaster" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-//data "vsphere_network" "networkWorker" {
-//  name = var.worker.network
-//  datacenter_id = data.vsphere_datacenter.dc.id
-//}
+data "vsphere_network" "networkWorker" {
+  count = length(var.vmw.kubernetes.clusters) * var.vmw.kubernetes.workers.count
+  name = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].worker.network
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
 
 
 

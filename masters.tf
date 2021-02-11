@@ -1,11 +1,11 @@
 
 
-resource "null_resource" "master" {
-  count            = length(var.vmw.kubernetes.clusters)
-  provisioner "local-exec" {
-    command = "echo 'cni ${var.vmw.kubernetes.clusters[count.index].cni.name}', cpu:${var.vmw.kubernetes.clusters[count.index].master.cpu}"
-  }
-}
+//resource "null_resource" "master" {
+//  count            = length(var.vmw.kubernetes.clusters)
+//  provisioner "local-exec" {
+//    command = "echo 'cni ${var.vmw.kubernetes.clusters[count.index].cni.name}', cpu:${var.vmw.kubernetes.clusters[count.index].master.cpu}"
+//  }
+//}
 
 data "template_file" "master_userdata" {
   count = length(var.vmw.kubernetes.clusters)
