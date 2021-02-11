@@ -25,12 +25,12 @@ resource "null_resource" "ansible_hosts_cluster_static2" {
   depends_on = [null_resource.ansible_hosts_cluster_workers]
   count            = length(var.vmw.kubernetes.clusters)
   provisioner "local-exec" {
-    command = "echo '  vars:' | tee -a hosts_cluster_${count.index} ; echo '    ansible_user: ${var.vmw.kubernetes.clusters[count.index].username}' | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: ${var.jump.private_key_path}' | tee -a hosts_cluster_${count.index}"
+    command = "echo '  vars:' | tee -a hosts_cluster_${count.index} ; echo '    ansible_user: ${var.vmw.kubernetes.clusters[count.index].username}' | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: \'${var.jump.private_key_path}\'' | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: \'-o StrictHostKeyChecking=no\'' | tee -a hosts_cluster_${count.index}"
   }
 }
 
 
-resource "null_resource" "ansible_bootstrap1" {
+resource "null_resource" "ansible_keys" {
   depends_on = [null_resource.ansible_hosts_cluster_static2, vsphere_virtual_machine.jump]
   connection {
     host = vsphere_virtual_machine.jump.default_ip_address
@@ -47,13 +47,15 @@ resource "null_resource" "ansible_bootstrap1" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}"
+      "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}",
+      "git clone ${var.ansible.k8sInstallUrl} --branch ${var.ansible.k8sInstallTag}",
+      "touch ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg"
     ]
   }
 }
 
-resource "null_resource" "ansible_bootstrap2" {
-  depends_on = [null_resource.ansible_bootstrap1]
+resource "null_resource" "ansible_bootstrap" {
+  depends_on = [null_resource.ansible_keys]
   count = length(var.vmw.kubernetes.clusters)
   connection {
     host = vsphere_virtual_machine.jump.default_ip_address
@@ -70,7 +72,7 @@ resource "null_resource" "ansible_bootstrap2" {
 
   provisioner "remote-exec" {
     inline = [
-      "git clone ${var.ansible.k8sInstallUrl} --branch ${var.ansible.k8sInstallTag} ; ansible-playbook -i hosts_cluster_${count.index} ${basename(var.ansible.k8sInstallUrl)}/main.yml --extra-vars '{\"kubernetes\": ${jsonencode(var.vmw.kubernetes.clusters[count.index])}}'"
+      "cd ${basename(var.ansible.k8sInstallUrl)}; ansible-playbook -i hosts_cluster_${count.index} main.yml --extra-vars '{\"kubernetes\": ${jsonencode(var.vmw.kubernetes.clusters[count.index])}}'"
     ]
   }
 }

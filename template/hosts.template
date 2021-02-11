@@ -1,6 +1,0 @@
----
-all:
-  children:
-    master:
-      hosts:
-        ${ip}:
