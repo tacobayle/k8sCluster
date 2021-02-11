@@ -1,6 +1,0 @@
----
-all:
-  children:
-    master:
-      children:
-        1.1.1.1:
