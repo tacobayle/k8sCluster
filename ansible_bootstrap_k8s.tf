@@ -40,14 +40,13 @@ resource "null_resource" "ansible_keys" {
     private_key = file(var.jump.private_key_path)
   }
 
-  provisioner "file" {
-    source      = var.jump.private_key_path
-    destination = "~/.ssh/${basename(var.jump.private_key_path)}"
-  }
+//  provisioner "file" {
+//    source      = var.jump.private_key_path
+//    destination = "~/.ssh/${basename(var.jump.private_key_path)}"
+//  }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}",
       "git clone ${var.ansible.k8sInstallUrl} --branch ${var.ansible.k8sInstallTag}",
       "echo '[defaults]' | tee ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg",
       "echo 'private_key_file = /home/${var.jump.username}/.ssh/${basename(var.jump.private_key_path)}' | tee -a ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg",
