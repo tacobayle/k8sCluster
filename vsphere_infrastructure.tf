@@ -41,27 +41,3 @@ resource "vsphere_folder" "folder" {
   type          = "vm"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
-
-resource "vsphere_tag_category" "ansible_group_jump" {
-  name = "ansible_group_jump"
-  cardinality = "SINGLE"
-  associable_types = [
-    "VirtualMachine",
-  ]
-}
-
-resource "vsphere_tag_category" "ansible_group_master" {
-  name = "ansible_group_master"
-  cardinality = "SINGLE"
-  associable_types = [
-    "VirtualMachine",
-  ]
-}
-
-resource "vsphere_tag_category" "ansible_group_worker" {
-  name = "ansible_group_worker"
-  cardinality = "SINGLE"
-  associable_types = [
-    "VirtualMachine",
-  ]
-}
