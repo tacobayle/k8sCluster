@@ -25,7 +25,7 @@ resource "null_resource" "ansible_hosts_cluster_static2" {
   depends_on = [null_resource.ansible_hosts_cluster_workers]
   count            = length(var.vmw.kubernetes.clusters)
   provisioner "local-exec" {
-    command = "echo '  vars:' | tee -a hosts_cluster_${count.index} ; echo '    ansible_user: ${var.vmw.kubernetes.clusters[count.index].username}' | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: \\"${var.jump.private_key_path}\\" | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: \\"-o StrictHostKeyChecking=no\\"' | tee -a hosts_cluster_${count.index}"
+    command = "echo '  vars:' | tee -a hosts_cluster_${count.index} ; echo '    ansible_user: ${var.vmw.kubernetes.clusters[count.index].username}' | tee -a hosts_cluster_${count.index}"
   }
 }
 
@@ -49,7 +49,10 @@ resource "null_resource" "ansible_keys" {
     inline = [
       "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}",
       "git clone ${var.ansible.k8sInstallUrl} --branch ${var.ansible.k8sInstallTag}",
-      "touch ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg"
+      "echo '[defaults]' | tee ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg",
+      "echo 'private_key_file = /home/${var.jump.username}/.ssh/${basename(var.jump.private_key_path)}' | tee -a ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg",
+      "echo 'host_key_checking = False' | tee -a ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg",
+      "echo 'host_key_auto_add = True' | tee -a ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg"
     ]
   }
 }
