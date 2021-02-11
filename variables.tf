@@ -50,6 +50,7 @@ variable "vmw" {
       clusters = [
         {
           name = "cluster1"
+          username = "ubuntu"
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
           }
@@ -65,7 +66,6 @@ variable "vmw" {
             wait_for_guest_net_routable = "false"
             template_name = "ubuntu-bionic-18.04-cloudimg-template"
             netplanFile = "/etc/netplan/50-cloud-init.yaml"
-            username = "ubuntu"
           }
           worker = {
             cpu = 4
@@ -75,11 +75,11 @@ variable "vmw" {
             wait_for_guest_net_routable = "false"
             template_name = "ubuntu-bionic-18.04-cloudimg-template"
             netplanFile = "/etc/netplan/50-cloud-init.yaml"
-            username = "ubuntu"
           }
         },
         {
           name = "cluster2"
+          username = "ubuntu"
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
           }
@@ -96,7 +96,6 @@ variable "vmw" {
             wait_for_guest_net_routable = "false"
             template_name = "ubuntu-bionic-18.04-cloudimg-template"
             netplanFile = "/etc/netplan/50-cloud-init.yaml"
-            username = "ubuntu"
           }
           worker = {
             cpu = 4
@@ -106,11 +105,11 @@ variable "vmw" {
             wait_for_guest_net_routable = "false"
             template_name = "ubuntu-bionic-18.04-cloudimg-template"
             netplanFile = "/etc/netplan/50-cloud-init.yaml"
-            username = "ubuntu"
           }
         },
         {
           name = "cluster3"
+          username = "ubuntu"
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
           }
@@ -127,7 +126,6 @@ variable "vmw" {
             wait_for_guest_net_routable = "false"
             template_name = "ubuntu-bionic-18.04-cloudimg-template"
             netplanFile = "/etc/netplan/50-cloud-init.yaml"
-            username = "ubuntu"
           }
           worker = {
             cpu = 4
@@ -137,7 +135,6 @@ variable "vmw" {
             wait_for_guest_net_routable = "false"
             template_name = "ubuntu-bionic-18.04-cloudimg-template"
             netplanFile = "/etc/netplan/50-cloud-init.yaml"
-            username = "ubuntu"
           }
         },
       ]

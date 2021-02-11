@@ -14,7 +14,7 @@ data "template_file" "master_userdata" {
     netplanFile  = var.vmw.kubernetes.clusters[count.index].master.netplanFile
     pubkey       = file(var.jump.public_key_path)
     dockerVersion = var.vmw.kubernetes.clusters[count.index].docker.version
-    username = var.vmw.kubernetes.clusters[count.index].master.username
+    username = var.vmw.kubernetes.clusters[count.index].username
     docker_registry_username = var.docker_registry_username
     docker_registry_password = var.docker_registry_password
     cni = var.vmw.kubernetes.clusters[count.index].cni.name
@@ -79,7 +79,7 @@ resource "vsphere_virtual_machine" "master" {
     host        = self.default_ip_address
     type        = "ssh"
     agent       = false
-    user        = var.vmw.kubernetes.clusters[count.index].master.username
+    user        = var.vmw.kubernetes.clusters[count.index].username
     private_key = file(var.jump.private_key_path)
   }
 

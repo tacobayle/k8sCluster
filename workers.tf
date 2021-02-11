@@ -5,7 +5,7 @@ data "template_file" "worker_userdata" {
     netplanFile  = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].worker.netplanFile
     pubkey       = file(var.jump.public_key_path)
     dockerVersion = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].docker.version
-    username = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].worker.username
+    username = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].username
     docker_registry_username = var.docker_registry_username
     docker_registry_password = var.docker_registry_password
     cni = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].cni.name
@@ -69,7 +69,7 @@ resource "vsphere_virtual_machine" "worker" {
     host        = self.default_ip_address
     type        = "ssh"
     agent       = false
-    user        = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].worker.username
+    user        = var.vmw.kubernetes.clusters[floor(count.index / var.vmw.kubernetes.workers.count)].username
     private_key = file(var.jump.private_key_path)
   }
 
