@@ -40,6 +40,22 @@ variable "jump" {
   }
 }
 
+variable "ansible" {
+  type = map
+  default = {
+    aviPbAbsentUrl = "https://github.com/tacobayle/ansiblePbAviAbsent"
+    aviPbAbsentTag = "v1.48"
+    aviConfigureUrl = "https://github.com/tacobayle/aviConfigure"
+    aviConfigureTag = "v4.16"
+    version = "2.9.12"
+    opencartInstallUrl = "https://github.com/tacobayle/ansibleOpencartInstall"
+    opencartInstallTag = "v1.21"
+    directory = "ansible"
+    k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
+    k8sInstallTag = "v1.51"
+  }
+}
+
 variable "vmw" {
   default = {
     name = "cloudVmw"

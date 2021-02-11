@@ -28,3 +28,39 @@ resource "null_resource" "ansible_hosts_cluster_static2" {
     command = "echo '  vars:' | tee -a hosts_cluster_${count.index} ; echo '    ansible_user: ${var.vmw.kubernetes.clusters[count.index].username}' | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: ${var.jump.private_key_path}' | tee -a hosts_cluster_${count.index}"
   }
 }
+
+
+resource "null_resource" "ansible_bootstrap1" {
+  depends_on = [null_resource.ansible_hosts_cluster_static2, vsphere_virtual_machine.jump]
+  connection {
+    host = vsphere_virtual_machine.jump.default_ip_address
+    type = "ssh"
+    agent = false
+    user = var.jump.username
+    private_key = file(var.jump.private_key_path)
+  }
+
+  provisioner "file" {
+    source      = var.jump.private_key_path
+    destination = "~/.ssh/${basename(var.jump.private_key_path)}"
+  }
+
+}
+
+resource "null_resource" "ansible_bootstrap2" {
+  depends_on = [null_resource.ansible_bootstrap1]
+  count            = length(var.vmw.kubernetes.clusters)
+  connection {
+    host = vsphere_virtual_machine.jump.default_ip_address
+    type = "ssh"
+    agent = false
+    user = var.jump.username
+    private_key = file(var.jump.private_key_path)
+  }
+
+  provisioner "file" {
+    source      = "hosts_cluster_${count.index}"
+    destination = "hosts_cluster_${count.index}"
+  }
+
+}
