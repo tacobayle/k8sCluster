@@ -25,7 +25,7 @@ resource "null_resource" "ansible_hosts_cluster_static2" {
   depends_on = [null_resource.ansible_hosts_cluster_workers]
   count            = length(var.vmw.kubernetes.clusters)
   provisioner "local-exec" {
-    command = "echo '  vars:' | tee -a hosts_cluster_${count.index} ; echo '    ansible_user: ${var.vmw.kubernetes.clusters[count.index].username}' | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: \'${var.jump.private_key_path}\'' | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: \'-o StrictHostKeyChecking=no\'' | tee -a hosts_cluster_${count.index}"
+    command = "echo '  vars:' | tee -a hosts_cluster_${count.index} ; echo '    ansible_user: ${var.vmw.kubernetes.clusters[count.index].username}' | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: \"${var.jump.private_key_path}\" | tee -a hosts_cluster_${count.index}; echo '    ansible_ssh_common_args: \"-o StrictHostKeyChecking=no\"' | tee -a hosts_cluster_${count.index}"
   }
 }
 
