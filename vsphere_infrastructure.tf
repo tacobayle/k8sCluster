@@ -23,14 +23,15 @@ data "vsphere_network" "networkMgt" {
 }
 
 data "vsphere_network" "networkMaster" {
-  name = var.master.network
+  count = length(var.vmw.kubernetes.clusters)
+  name = var.vmw.kubernetes.clusters[count.index].master.network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_network" "networkWorker" {
-  name = var.worker.network
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
+//data "vsphere_network" "networkWorker" {
+//  name = var.worker.network
+//  datacenter_id = data.vsphere_datacenter.dc.id
+//}
 
 
 
