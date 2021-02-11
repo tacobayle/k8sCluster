@@ -70,7 +70,7 @@ resource "null_resource" "ansible_bootstrap" {
 
   provisioner "file" {
     source = "hosts_cluster_${count.index}"
-    destination = "hosts_cluster_${count.index}"
+    destination = "${basename(var.ansible.k8sInstallUrl)}/hosts_cluster_${count.index}"
   }
 
   provisioner "remote-exec" {
