@@ -107,6 +107,7 @@ variable "vmw" {
             template_name = "ubuntu-bionic-18.04-cloudimg-template"
             netplanFile = "/etc/netplan/50-cloud-init.yaml"
             username = "ubuntu"
+          }
         },
         {
           name = "cluster3"
@@ -137,6 +138,7 @@ variable "vmw" {
             template_name = "ubuntu-bionic-18.04-cloudimg-template"
             netplanFile = "/etc/netplan/50-cloud-init.yaml"
             username = "ubuntu"
+          }
         },
       ]
     }
