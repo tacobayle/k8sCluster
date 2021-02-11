@@ -9,7 +9,7 @@ resource "null_resource" "ansible_hosts_cluster_static1" {
   depends_on = [null_resource.ansible_hosts_cluster_master]
   count            = length(var.vmw.kubernetes.clusters)
   provisioner "local-exec" {
-    command = "tee -a hosts_cluster_${count.index} > /dev/null <<EOT\nworkers:\n      hosts:\nEOT"
+    command = "tee -a hosts_cluster_${count.index} > /dev/null <<EOT\n    workers:\n      hosts:\nEOT"
   }
 }
 
