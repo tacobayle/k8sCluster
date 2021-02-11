@@ -45,11 +45,16 @@ resource "null_resource" "ansible_bootstrap1" {
     destination = "~/.ssh/${basename(var.jump.private_key_path)}"
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 600 ~/.ssh/${basename(var.jump.private_key_path)}"
+    ]
+  }
 }
 
 resource "null_resource" "ansible_bootstrap2" {
   depends_on = [null_resource.ansible_bootstrap1]
-  count            = length(var.vmw.kubernetes.clusters)
+  count = length(var.vmw.kubernetes.clusters)
   connection {
     host = vsphere_virtual_machine.jump.default_ip_address
     type = "ssh"
@@ -59,8 +64,13 @@ resource "null_resource" "ansible_bootstrap2" {
   }
 
   provisioner "file" {
-    source      = "hosts_cluster_${count.index}"
+    source = "hosts_cluster_${count.index}"
     destination = "hosts_cluster_${count.index}"
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "git clone ${var.ansible.k8sInstallUrl} --branch ${var.ansible.k8sInstallTag} ; ansible-playbook -i hosts_cluster_${count.index} ${basename(var.ansible.k8sInstallUrl)}/main.yml --extra-vars '{\"kubernetes\": ${jsonencode(var.vmw.kubernetes.clusters[count.index])}}'"
+    ]
+  }
 }

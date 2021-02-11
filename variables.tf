@@ -52,7 +52,7 @@ variable "ansible" {
     opencartInstallTag = "v1.21"
     directory = "ansible"
     k8sInstallUrl = "https://github.com/tacobayle/ansibleK8sInstall"
-    k8sInstallTag = "v1.51"
+    k8sInstallTag = "v1.52"
   }
 }
 
@@ -66,10 +66,16 @@ variable "vmw" {
       clusters = [
         {
           name = "cluster1"
+          netplanApply = true
           username = "ubuntu"
+          version = "1.18.2-00"
+          networks = {
+            pod = "192.168.0.0/16"
+          }
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
           }
+          interface = "ens224"
           cni = {
             url = "https://docs.projectcalico.org/manifests/calico.yaml"
             name = "calico" # calico
@@ -95,10 +101,16 @@ variable "vmw" {
         },
         {
           name = "cluster2"
+          netplanApply = true
           username = "ubuntu"
+          version = "1.18.2-00"
+          networks = {
+            pod = "192.168.1.0/16"
+          }
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
           }
+          interface = "ens224"
           cni = {
             url = "https://docs.projectcalico.org/manifests/calico.yaml"
             name = "calico" # calico
@@ -125,10 +137,16 @@ variable "vmw" {
         },
         {
           name = "cluster3"
+          netplanApply = true
           username = "ubuntu"
+          version = "1.18.2-00"
+          networks = {
+            pod = "192.168.2.0/16"
+          }
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
           }
+          interface = "ens224"
           cni = {
             url = "https://docs.projectcalico.org/manifests/calico.yaml"
             name = "calico" # calico
