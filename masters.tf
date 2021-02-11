@@ -17,6 +17,7 @@ data "template_file" "master_userdata" {
     username = var.vmw.kubernetes.clusters[count.index].master.username
     docker_registry_username = var.docker_registry_username
     docker_registry_password = var.docker_registry_password
+    cni = var.vmw.kubernetes.clusters[count.index].cni.name
   }
 }
 

@@ -55,7 +55,7 @@ variable "vmw" {
           }
           cni = {
             url = "https://docs.projectcalico.org/manifests/calico.yaml"
-            name = "calico"
+            name = "calico" # calico
           }
           master = {
             cpu = 8
@@ -84,8 +84,8 @@ variable "vmw" {
             version = "5:19.03.8~3-0~ubuntu-bionic"
           }
           cni = {
-            url = "https://docs.projectcalico.org/manifests/toto"
-            name = "toto"
+            url = "https://docs.projectcalico.org/manifests/calico.yaml"
+            name = "calico" # calico
           }
           master = {
             count = 1
@@ -115,8 +115,8 @@ variable "vmw" {
             version = "5:19.03.8~3-0~ubuntu-bionic"
           }
           cni = {
-            url = "https://docs.projectcalico.org/manifests/toto"
-            name = "antrea"
+            url = "https://docs.projectcalico.org/manifests/calico.yaml"
+            name = "calico" # calico
           }
           master = {
             count = 1
