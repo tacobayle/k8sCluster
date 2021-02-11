@@ -21,6 +21,7 @@ data "template_file" "master_userdata" {
 }
 
 data "vsphere_virtual_machine" "master" {
+  count = length(var.vmw.kubernetes.clusters)
   name          = var.vmw.kubernetes.clusters[count.index].master.template_name
   datacenter_id = data.vsphere_datacenter.dc.id
 }
@@ -45,16 +46,16 @@ resource "vsphere_virtual_machine" "master" {
   memory = var.vmw.kubernetes.clusters[count.index].master.memory
   #wait_for_guest_net_timeout = var.master["wait_for_guest_net_timeout"]
   wait_for_guest_net_routable = var.vmw.kubernetes.clusters[count.index].master.wait_for_guest_net_routable
-  guest_id = data.vsphere_virtual_machine.master.guest_id
-  scsi_type = data.vsphere_virtual_machine.master.scsi_type
-  scsi_bus_sharing = data.vsphere_virtual_machine.master.scsi_bus_sharing
-  scsi_controller_count = data.vsphere_virtual_machine.master.scsi_controller_scan_count
+  guest_id = data.vsphere_virtual_machine.master[count.index].guest_id
+  scsi_type = data.vsphere_virtual_machine.master[count.index].scsi_type
+  scsi_bus_sharing = data.vsphere_virtual_machine.master[count.index].scsi_bus_sharing
+  scsi_controller_count = data.vsphere_virtual_machine.master[count.index].scsi_controller_scan_count
 
   disk {
     size             = var.vmw.kubernetes.clusters[count.index].master.disk
     label            = "${var.vmw.kubernetes.clusters[count.index].name}-master.lab_vmdk"
-    eagerly_scrub    = data.vsphere_virtual_machine.master.disks.0.eagerly_scrub
-    thin_provisioned = data.vsphere_virtual_machine.master.disks.0.thin_provisioned
+    eagerly_scrub    = data.vsphere_virtual_machine.master[count.index].disks.0.eagerly_scrub
+    thin_provisioned = data.vsphere_virtual_machine.master[count.index].disks.0.thin_provisioned
   }
 
   cdrom {
@@ -62,7 +63,7 @@ resource "vsphere_virtual_machine" "master" {
   }
 
   clone {
-    template_uuid = data.vsphere_virtual_machine.master.id
+    template_uuid = data.vsphere_virtual_machine.master[count.index].id
   }
 
   vapp {
