@@ -31,33 +31,9 @@ resource "null_resource" "ansible_hosts_cluster_static2" {
 
 
 resource "null_resource" "ansible_keys" {
-  depends_on = [null_resource.ansible_hosts_cluster_static2, vsphere_virtual_machine.jump]
-  connection {
-    host = vsphere_virtual_machine.jump.default_ip_address
-    type = "ssh"
-    agent = false
-    user = var.jump.username
-    private_key = file(var.jump.private_key_path)
-  }
-
-//  provisioner "file" {
-//    source      = var.jump.private_key_path
-//    destination = "~/.ssh/${basename(var.jump.private_key_path)}"
-//  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "git clone ${var.ansible.k8sInstallUrl} --branch ${var.ansible.k8sInstallTag}",
-      "echo '[defaults]' | tee ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg",
-      "echo 'private_key_file = /home/${var.jump.username}/.ssh/${basename(var.jump.private_key_path)}' | tee -a ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg",
-      "echo 'host_key_checking = False' | tee -a ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg",
-      "echo 'host_key_auto_add = True' | tee -a ${basename(var.ansible.k8sInstallUrl)}/ansible.cfg"
-    ]
-  }
-}
-
-resource "null_resource" "ansible_bootstrap" {
-  depends_on = [null_resource.ansible_keys]
+  depends_on = [
+    null_resource.ansible_hosts_cluster_static2,
+    vsphere_virtual_machine.jump]
   count = length(var.vmw.kubernetes.clusters)
   connection {
     host = vsphere_virtual_machine.jump.default_ip_address
@@ -67,14 +43,54 @@ resource "null_resource" "ansible_bootstrap" {
     private_key = file(var.jump.private_key_path)
   }
 
+  //  provisioner "file" {
+  //    source      = var.jump.private_key_path
+  //    destination = "~/.ssh/${basename(var.jump.private_key_path)}"
+  //  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "git clone ${var.ansible.k8sInstallUrl} --branch ${var.ansible.k8sInstallTag} ansible_cluster_${count.index}",
+      "echo '[defaults]' | tee ansible_cluster_${count.index}/ansible.cfg",
+      "echo 'private_key_file = /home/${var.jump.username}/.ssh/${basename(var.jump.private_key_path)}' | tee -a ansible_cluster_${count.index}/ansible.cfg",
+      "echo 'host_key_checking = False' | tee -a ansible_cluster_${count.index}/ansible.cfg",
+      "echo 'host_key_auto_add = True' | tee -a ansible_cluster_${count.index}/ansible.cfg"
+    ]
+  }
+
   provisioner "file" {
     source = "hosts_cluster_${count.index}"
-    destination = "${basename(var.ansible.k8sInstallUrl)}/hosts_cluster_${count.index}"
+    destination = "ansible_cluster_${count.index}/hosts_cluster_${count.index}"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "cd ${basename(var.ansible.k8sInstallUrl)}; ansible-playbook -i hosts_cluster_${count.index} main.yml --extra-vars '{\"kubernetes\": ${jsonencode(var.vmw.kubernetes.clusters[count.index])}}'"
+      "cd ansible_cluster_${count.index}; ansible-playbook -i hosts_cluster_${count.index} main.yml --extra-vars '{\"kubernetes\": ${jsonencode(var.vmw.kubernetes.clusters[count.index])}}'"
     ]
   }
 }
+  
+//}
+//
+//resource "null_resource" "ansible_bootstrap" {
+//  depends_on = [null_resource.ansible_keys]
+//  count = length(var.vmw.kubernetes.clusters)
+//  connection {
+//    host = vsphere_virtual_machine.jump.default_ip_address
+//    type = "ssh"
+//    agent = false
+//    user = var.jump.username
+//    private_key = file(var.jump.private_key_path)
+//  }
+//
+//  provisioner "file" {
+//    source = "hosts_cluster_${count.index}"
+//    destination = "${basename(var.ansible.k8sInstallUrl)}/hosts_cluster_${count.index}"
+//  }
+//
+//  provisioner "remote-exec" {
+//    inline = [
+//      "cd ${basename(var.ansible.k8sInstallUrl)}; ansible-playbook -i hosts_cluster_${count.index} main.yml --extra-vars '{\"kubernetes\": ${jsonencode(var.vmw.kubernetes.clusters[count.index])}}'"
+//    ]
+//  }
+//}
