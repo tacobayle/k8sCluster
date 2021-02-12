@@ -110,6 +110,12 @@ variable "vmw" {
           }
           version = "1.18.2-00" # k8s version
           arePodsReachable = "false" # defines in values.yml if dynamic route to reach the pods
+          serviceEngineGroup = {
+            name = "seg-cluster1"
+            ha_mode = "HA_MODE_SHARED"
+            min_scaleout_per_vs = "2"
+            vcenter_folder = "NicTfVmw"
+          }
           networks = {
             pod = "192.168.0.0/16"
           }
@@ -152,6 +158,12 @@ variable "vmw" {
           }
           version = "1.18.2-00"
           arePodsReachable = "false"
+          serviceEngineGroup = {
+            name = "seg-cluster2"
+            ha_mode = "HA_MODE_SHARED"
+            min_scaleout_per_vs = "2"
+            vcenter_folder = "NicTfVmw"
+          }
           networks = {
             pod = "192.168.1.0/16"
           }
@@ -195,6 +207,12 @@ variable "vmw" {
           }
           version = "1.18.2-00"
           arePodsReachable = "false"
+          serviceEngineGroup = {
+            name = "seg-cluster3"
+            ha_mode = "HA_MODE_SHARED"
+            min_scaleout_per_vs = "2"
+            vcenter_folder = "NicTfVmw"
+          }
           networks = {
             pod = "192.168.2.0/16"
           }
