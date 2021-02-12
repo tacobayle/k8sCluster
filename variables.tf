@@ -102,7 +102,7 @@ variable "vmw" {
       }
       clusters = [
         {
-          name = "cluster1" # cluster name
+          name = "k8s-cluster1" # cluster name
           netplanApply = true
           username = "ubuntu" # default username dor docker and to connect
           ako = {
@@ -150,7 +150,7 @@ variable "vmw" {
           }
         },
         {
-          name = "cluster2"
+          name = "k8s-cluster2"
           netplanApply = true
           username = "ubuntu"
           ako = {
