@@ -1,14 +1,9 @@
-# Default values for ako.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
 
 image:
   repository: avinetworks/ako
   pullPolicy: IfNotPresent
 
-### This section outlines the generic AKO settings
 AKOSettings:
   logLevel: "INFO" #enum: INFO|DEBUG|WARN|ERROR
   fullSyncFrequency: "1800" # This frequency controls how often AKO polls the Avi controller to update itself with cloud configurations.
@@ -23,22 +18,13 @@ AKOSettings:
     labelKey: ""
     labelValue: ""
 
-### This section outlines the network settings for virtualservices.
 NetworkSettings:
-  ## This list of network and cidrs are used in pool placement network for vcenter cloud.
-  ## Node Network details are not needed when in nodeport mode / static routes are disabled / non vcenter clouds.
   nodeNetworkList: []
-  # nodeNetworkList:
-  #   - networkName: "network-name"
-  #     cidrs:
-  #       - 10.0.0.1/24
-  #       - 11.0.0.1/24
   subnetIP: ${subnetIP} # Subnet IP of the vip network
   subnetPrefix: ${subnetPrefix} # Subnet Prefix of the vip network
   networkName: ${networkName} # Network Name of the vip network
   enableRHI: false # This is a cluster wide setting for BGP peering.
 
-### This section outlines all the knobs  used to control Layer 7 loadbalancing settings in AKO.
 L7Settings:
   defaultIngController: "true"
   l7ShardingScheme: "hostname"
@@ -46,12 +32,10 @@ L7Settings:
   shardVSSize: "LARGE" # Use this to control the layer 7 VS numbers. This applies to both secure/insecure VSes but does not apply for passthrough. ENUMs: LARGE, MEDIUM, SMALL
   passthroughShardSize: "SMALL" # Control the passthrough virtualservice numbers using this ENUM. ENUMs: LARGE, MEDIUM, SMALL
 
-### This section outlines all the knobs  used to control Layer 4 loadbalancing settings in AKO.
 L4Settings:
   advancedL4: "false" # Use this knob to control the settings for the services API usage. Default to not using services APIs: https://github.com/kubernetes-sigs/service-apis
   defaultDomain: "" # If multiple sub-domains are configured in the cloud, use this knob to set the default sub-domain to use for L4 VSes.
 
-### This section outlines settings on the Avi controller that affects AKO's functionality.
 ControllerSettings:
   serviceEngineGroupName: ${serviceEngineGroupName} # Name of the ServiceEngine Group.
   controllerVersion: ${controllerVersion} # The controller API version
@@ -75,20 +59,11 @@ resources:
 podSecurityContext: {}
 
 rbac:
-  # Creates the pod security policy if set to true
   pspEnable: false
-
-
-#avicredentials:
-#  username: username
-#  password: password
-#  certificateAuthorityData: # optional - used for controller identity verification
-
 
 service:
   type: ClusterIP
   port: 80
-
 
 persistentVolumeClaim: ""
 mountPath: "/log"
