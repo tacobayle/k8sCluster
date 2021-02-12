@@ -30,10 +30,8 @@ resource "null_resource" "ansible_hosts_cluster_static2" {
 }
 
 
-resource "null_resource" "ansible_keys" {
-  depends_on = [
-    null_resource.ansible_hosts_cluster_static2,
-    vsphere_virtual_machine.jump]
+resource "null_resource" "ansible_bootstrap" {
+  depends_on = [null_resource.ansible_hosts_cluster_static2, vsphere_virtual_machine.jump]
   count = length(var.vmw.kubernetes.clusters)
   connection {
     host = vsphere_virtual_machine.jump.default_ip_address
@@ -69,7 +67,7 @@ resource "null_resource" "ansible_keys" {
     ]
   }
 }
-  
+
 //}
 //
 //resource "null_resource" "ansible_bootstrap" {

@@ -24,6 +24,28 @@ variable "vcenter" {
   }
 }
 
+variable "controller" {
+  default = {
+    cpu = 16
+    memory = 32768
+    disk = 256
+    count = "1"
+    version = "20.1.3-9085"
+    floatingIp = "10.41.134.130"
+    wait_for_guest_net_timeout = 4
+    private_key_path = "~/.ssh/cloudKey"
+    environment = "VMWARE"
+    dns =  ["10.23.108.1", "10.23.108.2"]
+    ntp = ["95.81.173.155", "188.165.236.162"]
+    from_email = "avicontroller@avidemo.fr"
+    se_in_provider_context = "true" # true is required for LSC Cloud
+    tenant_access_to_provider_se = "true"
+    tenant_vrf = "false"
+    aviCredsJsonFile = "~/.avicreds.json"
+    public_key_path = "~/.ssh/cloudKey.pub"
+  }
+}
+
 variable "jump" {
   type = map
   default = {
@@ -59,7 +81,22 @@ variable "ansible" {
 variable "vmw" {
   default = {
     name = "cloudVmw"
+    network_vip = {
+      name = "vxw-dvs-34-virtualwire-118-sid-1080117-sof2-01-vc08-avi-dev114"
+      ipStartPool = "50"
+      ipEndPool = "99"
+      cidr = "100.64.131.0/24"
+      type = "V4"
+      exclude_discovered_subnets = "true"
+      vcenter_dvs = "true"
+      dhcp_enabled = "no"
+    }
     kubernetes = {
+      ako = {
+        helm = {
+          url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+        }
+      }
       workers = {
         count = 3
       }
@@ -69,11 +106,15 @@ variable "vmw" {
           netplanApply = true
           username = "ubuntu"
           version = "1.18.2-00"
+          arePodsReachable = "false"
           networks = {
             pod = "192.168.0.0/16"
           }
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
+          }
+          service = {
+            type = "ClusterIP"
           }
           interface = "ens224"
           cni = {
@@ -104,11 +145,15 @@ variable "vmw" {
           netplanApply = true
           username = "ubuntu"
           version = "1.18.2-00"
+          arePodsReachable = "false"
           networks = {
             pod = "192.168.1.0/16"
           }
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
+          }
+          service = {
+            type = "ClusterIP"
           }
           interface = "ens224"
           cni = {
@@ -140,11 +185,15 @@ variable "vmw" {
           netplanApply = true
           username = "ubuntu"
           version = "1.18.2-00"
+          arePodsReachable = "false"
           networks = {
             pod = "192.168.2.0/16"
           }
           docker = {
             version = "5:19.03.8~3-0~ubuntu-bionic"
+          }
+          service = {
+            type = "ClusterIP"
           }
           interface = "ens224"
           cni = {
