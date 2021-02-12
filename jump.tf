@@ -19,7 +19,7 @@ data "vsphere_virtual_machine" "jump" {
 }
 
 resource "vsphere_virtual_machine" "jump" {
-  name             = var.jump["name"]
+  name             = "k8s-${var.jump.name}"
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   folder           = vsphere_folder.folder.path
@@ -53,7 +53,7 @@ resource "vsphere_virtual_machine" "jump" {
 
   vapp {
     properties = {
-     hostname    = "jump"
+     hostname    = "k8s-${var.jump.name}"
      public-keys = file(var.jump["public_key_path"])
      user-data   = base64encode(data.template_file.jumpbox_userdata.rendered)
    }
