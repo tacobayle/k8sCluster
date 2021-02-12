@@ -26,8 +26,12 @@ resource "null_resource" "ako" {
     private_key = file(var.jump.private_key_path)
   }
 
+  provisioner "local-exec" {
+    command = "cat > values-cluster-${count.index} <<EOL\n${data.template_file.values[count.index].rendered}\nEOL"
+  }
+
   provisioner "file" {
-    source = data.template_file.values[count.index].rendered
+    source = "values-cluster-${count.index}"
     destination = "values.yml"
   }
 
