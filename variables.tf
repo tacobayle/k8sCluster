@@ -102,11 +102,11 @@ variable "vmw" {
       }
       clusters = [
         {
-          name = "cluster1"
+          name = "cluster1" # cluster name
           netplanApply = true
-          username = "ubuntu"
-          version = "1.18.2-00"
-          arePodsReachable = "false"
+          username = "ubuntu" # default username dor docker and to connect
+          version = "1.18.2-00" # k8s version
+          arePodsReachable = "false" # defines in values.yml if dynamic route to reach the pods
           networks = {
             pod = "192.168.0.0/16"
           }
@@ -116,7 +116,7 @@ variable "vmw" {
           service = {
             type = "ClusterIP"
           }
-          interface = "ens224"
+          interface = "ens224" # interface used by k8s
           cni = {
             url = "https://docs.projectcalico.org/manifests/calico.yaml"
             name = "calico" # calico

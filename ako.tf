@@ -34,6 +34,7 @@ resource "null_resource" "ako" {
   provisioner "remote-exec" {
     inline = [
       "helm repo add ako ${var.vmw.kubernetes.ako.helm.url}",
+      "kubectl create ns avi-system",
     ]
   }
 }
