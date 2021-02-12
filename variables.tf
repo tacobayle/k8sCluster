@@ -105,6 +105,9 @@ variable "vmw" {
           name = "cluster1" # cluster name
           netplanApply = true
           username = "ubuntu" # default username dor docker and to connect
+          ako = {
+            namespace = "avi-system"
+          }
           version = "1.18.2-00" # k8s version
           arePodsReachable = "false" # defines in values.yml if dynamic route to reach the pods
           networks = {
@@ -144,6 +147,9 @@ variable "vmw" {
           name = "cluster2"
           netplanApply = true
           username = "ubuntu"
+          ako = {
+            namespace = "avi-system"
+          }
           version = "1.18.2-00"
           arePodsReachable = "false"
           networks = {
@@ -184,6 +190,9 @@ variable "vmw" {
           name = "cluster3"
           netplanApply = true
           username = "ubuntu"
+          ako = {
+            namespace = "avi-system"
+          }
           version = "1.18.2-00"
           arePodsReachable = "false"
           networks = {

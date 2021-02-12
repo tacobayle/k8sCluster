@@ -17,6 +17,7 @@ data "template_file" "values" {
 }
 
 resource "null_resource" "ako" {
+  depends_on = [null_resource.ansible_bootstrap]
   count = length(var.vmw.kubernetes.clusters)
   connection {
     host = vsphere_virtual_machine.master[count.index].default_ip_address
@@ -38,7 +39,7 @@ resource "null_resource" "ako" {
   provisioner "remote-exec" {
     inline = [
       "helm repo add ako ${var.vmw.kubernetes.ako.helm.url}",
-      "kubectl create ns avi-system",
+      "kubectl create ns ${var.vmw.kubernetes.clusters[count.index].ako.namespace}",
     ]
   }
 }
