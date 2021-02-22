@@ -39,8 +39,9 @@ resource "null_resource" "ako" {
   provisioner "remote-exec" {
     inline = [
       "helm repo add ako ${var.vmw.kubernetes.clusters[count.index].ako.helm.url}",
-      "kubectl patch serviceaccount default -p \"{\"imagePullSecrets\": [{\"name\": \"docker\"}]}\"",
       "kubectl create secret docker-registry docker --docker-server=docker.io --docker-username=${var.docker_registry_username} --docker-password=${var.docker_registry_password} --docker-email=${var.docker_registry_email}",
+      "echo 'kubectl patch serviceaccount default -p \"{\"imagePullSecrets\": [{\"name\": \"docker\"}]}\"'",
+      "kubectl patch serviceaccount default -p \"{\"imagePullSecrets\": [{\"name\": \"docker\"}]}\"",
       "for ns in $(echo '${jsonencode(var.vmw.kubernetes.clusters[count.index].namespaces)}' | jq -r '.[].name') ; do kubectl create ns $ns ; done",
       "for ns in $(echo '${jsonencode(var.vmw.kubernetes.clusters[count.index].namespaces)}' | jq -r '.[].name') ; do kubectl create secret docker-registry docker --docker-server=docker.io --docker-username=${var.docker_registry_username} --docker-password=${var.docker_registry_password} --docker-email=${var.docker_registry_email} -n $ns ; done",
       "for ns in $(echo '${jsonencode(var.vmw.kubernetes.clusters[count.index].namespaces)}' | jq -r '.[].name') ; do kubectl patch serviceaccount default -p \"{\"imagePullSecrets\": [{\"name\": \"docker\"}]}\" -n $ns ; done"
