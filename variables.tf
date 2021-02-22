@@ -92,11 +92,6 @@ variable "vmw" {
       dhcp_enabled = "no"
     }
     kubernetes = {
-      ako = {
-        helm = {
-          url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
-        }
-      }
       workers = {
         count = 2
       }
@@ -107,8 +102,25 @@ variable "vmw" {
           username = "ubuntu" # default username dor docker and to connect
           ako = {
             namespace = "avi-system"
+            helm = {
+              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+            }
           }
           version = "1.18.2-00" # k8s version
+          namespaces = [
+            {
+              name= "avi-system"
+            },
+            {
+              name= "ns1"
+            },
+            {
+              name= "ns2"
+            },
+            {
+              name= "ns3"
+            },
+          ]
           arePodsReachable = "false" # defines in values.yml if dynamic route to reach the pods
           serviceEngineGroup = {
             name = "seg-cluster1"
@@ -155,8 +167,25 @@ variable "vmw" {
           username = "ubuntu"
           ako = {
             namespace = "avi-system"
+            helm = {
+              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+            }
           }
           version = "1.18.2-00"
+          namespaces = [
+            {
+              name= "avi-system"
+            },
+            {
+              name= "ns1"
+            },
+            {
+              name= "ns2"
+            },
+            {
+              name= "ns3"
+            },
+          ]
           arePodsReachable = "false"
           serviceEngineGroup = {
             name = "seg-cluster2"
@@ -204,8 +233,25 @@ variable "vmw" {
           username = "ubuntu"
           ako = {
             namespace = "avi-system"
+            helm = {
+              url = "https://avinetworks.github.io/avi-helm-charts/charts/stable/ako"
+            }
           }
           version = "1.18.2-00"
+          namespaces = [
+            {
+              name= "avi-system"
+            },
+            {
+              name= "ns1"
+            },
+            {
+              name= "ns2"
+            },
+            {
+              name= "ns3"
+            },
+          ]
           arePodsReachable = "false"
           serviceEngineGroup = {
             name = "seg-cluster3"
