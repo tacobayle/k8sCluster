@@ -176,7 +176,56 @@ variable "vmw" {
           interface = "ens224"
           cni = {
             url = "https://github.com/vmware-tanzu/antrea/releases/download/v0.9.1/antrea.yml"
-            name = "antrea" # calico
+            name = "antrea"
+          }
+          master = {
+            count = 1
+            cpu = 8
+            memory = 16384
+            disk = 80
+            network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+            wait_for_guest_net_routable = "false"
+            template_name = "ubuntu-bionic-18.04-cloudimg-template"
+            netplanFile = "/etc/netplan/50-cloud-init.yaml"
+          }
+          worker = {
+            cpu = 4
+            memory = 8192
+            disk = 40
+            network = "vxw-dvs-34-virtualwire-124-sid-1080123-sof2-01-vc08-avi-dev120"
+            wait_for_guest_net_routable = "false"
+            template_name = "ubuntu-bionic-18.04-cloudimg-template"
+            netplanFile = "/etc/netplan/50-cloud-init.yaml"
+          }
+        },
+        {
+          name = "k8s-cluster3"
+          netplanApply = true
+          username = "ubuntu"
+          ako = {
+            namespace = "avi-system"
+          }
+          version = "1.18.2-00"
+          arePodsReachable = "false"
+          serviceEngineGroup = {
+            name = "seg-cluster3"
+            ha_mode = "HA_MODE_SHARED"
+            min_scaleout_per_vs = "2"
+            vcenter_folder = "NicTfVmw"
+          }
+          networks = {
+            pod = "10.244.0.0/16"
+          }
+          docker = {
+            version = "5:19.03.8~3-0~ubuntu-bionic"
+          }
+          service = {
+            type = "ClusterIP"
+          }
+          interface = "ens224"
+          cni = {
+            url = "https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml"
+            name = "flannel"
           }
           master = {
             count = 1
